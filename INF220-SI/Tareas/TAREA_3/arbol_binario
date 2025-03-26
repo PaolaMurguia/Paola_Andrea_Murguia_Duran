@@ -1,0 +1,144 @@
+class NodoArbol:
+    """Clase que representa un nodo en un árbol binario."""
+    
+    def __init__(self, valor):
+        self.valor = valor
+        self.izquierda = None
+        self.derecha = None
+
+    def get_valor(self):
+        return self.valor
+
+    def set_valor(self, valor):
+        self.valor = valor
+
+    def get_izquierda(self):
+        return self.izquierda
+
+    def set_izquierda(self, nodo):
+        self.izquierda = nodo
+
+    def get_derecha(self):
+        return self.derecha
+
+    def set_derecha(self, nodo):
+        self.derecha = nodo
+
+
+class ArbolBinario:
+    """Clase que representa un árbol binario."""
+
+    def __init__(self):
+        self.raiz = None
+
+    def insertar(self, valor):
+        """Inserta un valor en el árbol binario."""
+        if self.raiz is None:
+            self.raiz = NodoArbol(valor)
+        else:
+            self._insertar_recursivo(self.raiz, valor)
+
+    def _insertar_recursivo(self, nodo, valor):
+        """Método auxiliar recursivo para insertar un valor."""
+        if valor < nodo.get_valor():
+            if nodo.get_izquierda() is None:
+                nodo.set_izquierda(NodoArbol(valor))
+            else:
+                self._insertar_recursivo(nodo.get_izquierda(), valor)
+        else:
+            if nodo.get_derecha() is None:
+                nodo.set_derecha(NodoArbol(valor))
+            else:
+                self._insertar_recursivo(nodo.get_derecha(), valor)
+
+    def buscar(self, valor):
+        """Busca un valor en el árbol binario."""
+        return self._buscar_recursivo(self.raiz, valor)
+
+    def _buscar_recursivo(self, nodo, valor):
+        """Método auxiliar recursivo para la búsqueda."""
+        if nodo is None:
+            return False
+        if nodo.get_valor() == valor:
+            return True
+        if valor < nodo.get_valor():
+            return self._buscar_recursivo(nodo.get_izquierda(), valor)
+        return self._buscar_recursivo(nodo.get_derecha(), valor)
+
+    def es_hoja(self, nodo):
+        """Determina si un nodo es una hoja."""
+        return nodo is not None and nodo.get_izquierda() is None and nodo.get_derecha() is None
+    
+    def altura(self, nodo=None):
+        """Calcula la altura del árbol."""
+        if nodo is None:
+            nodo = self.raiz
+        if nodo is None:  # Si el árbol está vacío
+            return 0
+        if nodo.get_izquierda() is None and nodo.get_derecha() is None:
+            return 1  # Un nodo solo cuenta como altura 1
+        return 1 + max(
+            self.altura(nodo.get_izquierda()) if nodo.get_izquierda() else 0,
+            self.altura(nodo.get_derecha()) if nodo.get_derecha() else 0
+    )
+
+
+
+    def cantidad_nodos(self):
+        """Cuenta la cantidad de nodos en el árbol."""
+        return self._contar_nodos(self.raiz)
+
+    def _contar_nodos(self, nodo):
+        """Método auxiliar recursivo para contar nodos."""
+        if nodo is None:
+            return 0
+        return 1 + self._contar_nodos(nodo.get_izquierda()) + self._contar_nodos(nodo.get_derecha())
+
+    def amplitud(self):
+        """Devuelve la amplitud (máximo número de nodos en un nivel)."""
+        if self.raiz is None:
+            return 0
+        
+        from collections import deque
+        cola = deque([self.raiz])
+        max_amplitud = 0
+        
+        while cola:
+            nivel_actual = len(cola)
+            max_amplitud = max(max_amplitud, nivel_actual)
+            
+            for _ in range(nivel_actual):
+                nodo = cola.popleft()
+                if nodo.get_izquierda():
+                    cola.append(nodo.get_izquierda())
+                if nodo.get_derecha():
+                    cola.append(nodo.get_derecha())
+                    
+        return max_amplitud
+    
+
+if __name__ == "__main__":
+    # Crear un árbol binario
+    arbol = ArbolBinario()
+
+    # Insertar valores
+    valores = [50, 30, 70, 20, 40, 60, 80]
+    for v in valores:
+        arbol.insertar(v)
+
+    # Buscar valores
+    print("Buscar 40:", arbol.buscar(40))  # Debe imprimir True
+    print("Buscar 100:", arbol.buscar(100))  # Debe imprimir False
+
+    # Verificar si un nodo es hoja
+    nodo_hoja = arbol.raiz.get_izquierda().get_derecha()  # Nodo con valor 40
+    print("El nodo con valor 40 es hoja:", arbol.es_hoja(nodo_hoja))  # True
+
+    # Obtener altura del árbol
+    print("Altura del árbol:", arbol.altura())  # Debe ser 3
+
+    # Contar cantidad de nodos
+    print("Cantidad de nodos:", arbol.cantidad_nodos())  # Debe ser 7
+
+    # Obtener amplitud máxima
+    print("Amplitud máxima del árbol:", arbol.amplitud())  # Debe ser 2
