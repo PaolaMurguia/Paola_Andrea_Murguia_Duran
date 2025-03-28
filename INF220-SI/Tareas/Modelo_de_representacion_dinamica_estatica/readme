@@ -1,0 +1,12 @@
+Modelo de representacion Dinamico y Estaticos
+
+Implementar ADT abstractos Dinamicos y Estaticos:
+
+Realizar ejemplos de ADT de un objeto Automovil tanto en estructuras Dinamicas como Estaticas. 
+
+- Metodo Constructor, Getter y Setter.
+
+Nota: subir a la plataforma en el link de la tarea, toda tarea tienen que postear al github en la carpeta tarea.
+
+
+El bloque if __name__ == "__main__": verifica si el archivo está siendo ejecutado directamente. Si es así, el código dentro de este bloque se ejecutará. Si el archivo es importado, el código dentro de este bloque no se ejecutará.
